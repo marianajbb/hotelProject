@@ -1,0 +1,132 @@
+[{
+	"_id": {
+		"$oid": "67b61672ac6939b701caf4c7"
+	},
+	"name": "John Doe",
+	"age": 30,
+	"department": "Sales",
+	"salary": 50000,
+	"hire_date": {
+		"$date": "2020-01-01T00:00:00Z"
+	},
+	"projects": [
+		{
+			"name": "Project A",
+			"start_date": {
+				"$date": "2021-01-01T00:00:00Z"
+			},
+			"end_date": {
+				"$date": "2021-06-30T00:00:00Z"
+			}
+		},
+		{
+			"name": "Project B",
+			"start_date": {
+				"$date": "2021-07-01T00:00:00Z"
+			},
+			"end_date": {
+				"$date": "2021-12-31T00:00:00Z"
+			}
+		}
+	]
+},
+{
+	"_id": {
+		"$oid": "67b61f011e4a68ebe4b7d9c1"
+	},
+	"name": "Alice Johnson",
+	"age": 35,
+	"department": "Engineering",
+	"salary": 70000,
+	"hire_date": "2018-09-20T00:00:00Z",
+	"projects": [
+		{
+			"name": "Project E",
+			"start_date": "2019-04-01T00:00:00Z",
+			"end_date": "2019-10-01T00:00:00Z"
+		},
+		{
+			"name": "Project F",
+			"start_date": "2020-02-01T00:00:00Z",
+			"end_date": "2020-08-01T00:00:00Z"
+		}
+	]
+},
+{
+	"_id": {
+		"$oid": "67b61f011e4a68ebe4b7d9c2"
+	},
+	"name": "Jane Smith",
+	"age": 25,
+	"department": "Marketing",
+	"salary": 45000,
+	"hire_date": "2019-05-10T00:00:00Z",
+	"projects": [
+		{
+			"name": "Project C",
+			"start_date": "2020-03-01T00:00:00Z",
+			"end_date": "2020-08-31T00:00:00Z"
+		},
+		{
+			"name": "Project D",
+			"start_date": "2021-01-15T00:00:00Z",
+			"end_date": "2021-07-15T00:00:00Z"
+		}
+	]
+},
+{
+	"_id": {
+		"$oid": "67b61f011e4a68ebe4b7d9c3"
+	},
+	"name": "John Doe",
+	"age": 30,
+	"department": "Sales",
+	"salary": 50000,
+	"hire_date": "2020-01-15T00:00:00Z",
+	"projects": [
+		{
+			"name": "Project A",
+			"start_date": "2021-01-01T00:00:00Z",
+			"end_date": "2021-06-30T00:00:00Z"
+		},
+		{
+			"name": "Project B",
+			"start_date": "2021-07-01T00:00:00Z",
+			"end_date": "2021-12-31T00:00:00Z"
+		}
+	]
+},
+{
+	"_id": {
+		"$oid": "67b61f011e4a68ebe4b7d9c4"
+	},
+	"name": "Michelle Brown",
+	"age": 28,
+	"department": "Finance",
+	"salary": 55000,
+	"hire_date": "2017-11-30T00:00:00Z",
+	"projects": [
+		{
+			"name": "Project G",
+			"start_date": "2018-03-01T00:00:00Z",
+			"end_date": "2018-09-01T00:00:00Z"
+		},
+		{
+			"name": "Project H",
+			"start_date": "2019-06-01T00:00:00Z",
+			"end_date": "2019-12-01T00:00:00Z"
+		}
+	]
+},
+{
+	"_id": {
+		"$oid": "67b62d1f9482802c24ef9266"
+	},
+	"name": "Bob Johnson",
+	"age": 28,
+	"department": "IT",
+	"salary": 75000,
+	"hire_date": "2023-05-15",
+	"projects": []
+}]
+

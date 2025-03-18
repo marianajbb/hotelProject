@@ -1,0 +1,60 @@
+{
+  "employees": [
+    {
+      "firstName": "maria",
+      "lastName": "martinez",
+      "age": 30,
+      "salary": 7900,
+      "id": "dce6"
+    },
+    {
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "age": 25,
+      "salary": 45000,
+      "id": "a28c"
+    },
+    {
+      "firstName": "Michael",
+      "lastName": "Johnson",
+      "age": 40,
+      "salary": 60000,
+      "id": "4d87"
+    },
+    {
+      "firstName": "Emily",
+      "lastName": "Davis",
+      "age": 35,
+      "salary": 55000,
+      "id": "7d51"
+    },
+    {
+      "firstName": "Chris",
+      "lastName": "Brown",
+      "age": 28,
+      "salary": 48000,
+      "id": "9509"
+    },
+    {
+      "id": "ed33",
+      "firstName": "Mariana",
+      "lastName": "Betancourt",
+      "age": 25,
+      "salary": 30000
+    },
+    {
+      "firstName": "Mariana",
+      "lastName": "Bastado",
+      "age": 35,
+      "salary": 99998,
+      "id": "6f73"
+    },
+    {
+      "id": "e15c",
+      "firstName": "Mariana",
+      "lastName": "Brazon",
+      "age": 35,
+      "salary": 70000
+    }
+  ]
+}

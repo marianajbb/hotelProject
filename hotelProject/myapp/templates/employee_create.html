@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Employee</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Create Employee</h1>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" class="form-control" id="age" name="age" placeholder="Enter age" required>
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" class="form-control" id="department" name="department" placeholder="Enter department" required>
+            </div>
+
+            <div class="form-group">
+                <label for="salary">Salary</label>
+                <input type="number" class="form-control" id="salary" name="salary" placeholder="Enter salary" required>
+            </div>
+
+            <div class="form-group">
+                <label for="hire_date">Hire Date</label>
+                <input type="date" class="form-control" id="hire_date" name="hire_date" placeholder="Hire Date" required>
+            </div>
+
+            <button type="submit">Add Employee</button>
+        </form>
+        <a href="{% url 'employee_list' %}">Back to Employee List</a>
+    </div>
+</body>
+</html>

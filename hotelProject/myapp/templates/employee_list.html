@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee List</h1>
+    <div class="form-container">
+        <h3>Add Employee</h3>
+        <form id="employeeForm">
+            <input type="text" id="firstName" placeholder="First Name" required>
+            <input type="text" id="lastName" placeholder="Last Name" required>
+            <input type="number" id="age" placeholder="Age" required>
+            <input type="number" id="salary" placeholder="Salary" required>
+            <button type="submit">Add Employee</button>
+        </form>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Age</th>
+                <th>Salary</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+            <!-- Employee rows will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <script>
+        const url = 'http://localhost:3000/employees';
+        const employeeTableBody = document.getElementById('employeeTableBody');
+        const employeeForm = document.getElementById('employeeForm');
+
+        // Fetch and display employees
+        async function fetchEmployees() {
+            const response = await fetch(url);
+            const employees = await response.json();
+            employeeTableBody.innerHTML = '';
+            employees.forEach(employee => {
+                addEmployeeRow(employee);
+            });
+        }
+
+        // Add employee row to the table
+        function addEmployeeRow(employee) {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${employee.firstName}</td>
+                <td>${employee.lastName}</td>
+                <td>${employee.age}</td>
+                <td>${employee.salary}</td>
+                <td>
+                    <button class="edit-btn" data-id="${employee.id}">Edit</button>
+                    <button class="delete-btn" data-id="${employee.id}">Delete</button>
+                </td>
+            `;
+
+            employeeTableBody.appendChild(row);
+        }
+
+        // Add new employee
+        employeeForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newEmployee = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                age: parseInt(document.getElementById('age').value),
+                salary: parseFloat(document.getElementById('salary').value)
+            };
+            await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newEmployee)
+            });
+            employeeForm.reset();
+            fetchEmployees();
+        });
+
+        // Delete employee
+        async function deleteEmployee(id) {
+            await fetch(`${url}/${id}`, { method: 'DELETE' });
+            fetchEmployees();
+        }
+
+        // Edit employee row
+        async function editEmployeeRow(row, employee) {
+            row.innerHTML = `
+                <td><input type="text" value="${employee.firstName}" class="edit-firstName" required></td>
+                <td><input type="text" value="${employee.lastName}" class="edit-lastName" required></td>
+                <td><input type="number" value="${employee.age}" class="edit-age" required></td>
+                <td><input type="number" value="${employee.salary}" class="edit-salary" required></td>
+                <td>
+                    <button class="save-btn">Save</button>
+                    <button class="cancel-btn">Cancel</button>
+                </td>
+            `;
+
+            // Add event listeners for Save and Cancel buttons
+            row.querySelector('.save-btn').addEventListener('click', async () => {
+                const updatedEmployee = {
+                    firstName: row.querySelector('.edit-firstName').value,
+                    lastName: row.querySelector('.edit-lastName').value,
+                    age: parseInt(row.querySelector('.edit-age').value),
+                    salary: parseFloat(row.querySelector('.edit-salary').value),
+                };
+
+                // Update the employee via API
+                await fetch(`${url}/${employee.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedEmployee),
+                });
+
+                // Refresh the employee list
+                fetchEmployees();
+            });
+
+            row.querySelector('.cancel-btn').addEventListener('click', () => {
+                // Revert the row to its original state
+                row.innerHTML = `
+                    <td>${employee.firstName}</td>
+                    <td>${employee.lastName}</td>
+                    <td>${employee.age}</td>
+                    <td>${employee.salary}</td>
+                    <td>
+                        <button class="edit-btn" data-id="${employee.id}">Edit</button>
+                        <button class="delete-btn" data-id="${employee.id}">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        // This allows us to handle clicks on dynamically added rows
+        employeeTableBody.addEventListener('click', async (e) => {
+            const button = e.target;
+
+            if (button.classList.contains('edit-btn')) {
+                const row = button.closest('tr');
+                const id = button.getAttribute('data-id');
+
+                // Fetch the employee data
+                const response = await fetch(`${url}/${id}`);
+                const employee = await response.json();
+
+                // Make the row editable
+                editEmployeeRow(row, employee);
+            } else if (button.classList.contains('delete-btn')) {
+                const id = button.getAttribute('data-id');
+                await deleteEmployee(id);
+            }
+        });
+        //to run the mock-server you have to install node, npm and json-server
+        // 1. Install json-server globally: npm install -g json-server
+        // 2. Create a db.json file with the json format
+        // 3. Run the server: npx json-server db.json
+        // 4. Make sure your server is running on the same port as specified in the url variable (3000 in this case)
+
+
+        // Initial fetch
+        fetchEmployees();
+    </script>
+
+
+</body>
+</html>
