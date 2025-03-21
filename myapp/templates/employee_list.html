@@ -1,5 +1,212 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Employee List</title>#}
+{#    <style>#}
+{#        table {#}
+{#            width: 100%;#}
+{#            border-collapse: collapse;#}
+{#        }#}
+{##}
+{#        table, th, td {#}
+{#            border: 1px solid black;#}
+{#        }#}
+{##}
+{#        th, td {#}
+{#            padding: 10px;#}
+{#            text-align: left;#}
+{#        }#}
+{##}
+{#        .form-container {#}
+{#            margin-bottom: 20px;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#<h1>Employee List</h1>#}
+{#<div class="form-container">#}
+{#    <h3>Add Employee</h3>#}
+{#    <form id="employeeForm">#}
+{#        <input type="text" id="name" placeholder="Name" required>#}
+{#        <input type="number" id="age" placeholder="Age" required>#}
+{#        <input type="text" id="department" placeholder="Department" required>#}
+{#        <input type="number" id="salary" placeholder="Salary" required>#}
+{#        <input type="date" id="hire_date" placeholder="Hire Date" required>#}
+{#        <button type="submit">Add Employee</button>#}
+{#    </form>#}
+{#</div>#}
+{#<table>#}
+{#    <thead>#}
+{#    <tr>#}
+{#        <th>Name</th>#}
+{#        <th>Age</th>#}
+{#        <th>Department</th>#}
+{#        <th>Salary</th>#}
+{#        <th>Hire date</th>#}
+{#        <th>Actions</th>#}
+{#    </tr>#}
+{#    </thead>#}
+{#    <tbody id="employeeTableBody">#}
+{#    </tbody>#}
+{#</table>#}
+{##}
+{#<script>#}
+{#    const url = 'http://127.0.0.1:8000/api/employees/';#}
+{#    const employeeTableBody = document.getElementById('employeeTableBody');#}
+{#    const employeeForm = document.getElementById('employeeForm');#}
+{##}
+{#    // Fetch and display employees#}
+{#    async function fetchEmployees() {#}
+{#        try {#}
+{#            const response = await fetch(url, {#}
+{#                method: 'GET', // Use POST to get all employees#}
+{#                headers: {'Content-Type': 'application/json'},#}
+{#            });#}
+{#            const employees = await response.json();#}
+{#            employeeTableBody.innerHTML = '';#}
+{#            employees.forEach(employee => {#}
+{#                addEmployeeRow(employee);#}
+{#            });#}
+{#        } catch (error) {#}
+{#            console.error("Error fetching employees:", error);#}
+{#        }#}
+{#    }#}
+{##}
+{#    // Add employee row to the table#}
+{#    function addEmployeeRow(employee) {#}
+{#        const row = document.createElement('tr');#}
+{##}
+{#        row.innerHTML = `#}
+{#            <td>${employee.name}</td>#}
+{#            <td>${employee.age}</td>#}
+{#            <td>${employee.department}</td>#}
+{#            <td>${employee.salary}</td>#}
+{#            <td>${employee.hire_date}</td>#}
+{#            <td>#}
+{#                <button class="edit-btn" data-id="${employee.id}">Edit</button>#}
+{#                <button class="delete-btn" data-id="${employee.id}">Delete</button>#}
+{#            </td>#}
+{#        `;#}
+{##}
+{#        employeeTableBody.appendChild(row);#}
+{#    }#}
+{##}
+{#    // Add new employee#}
+{#    employeeForm.addEventListener('submit', async (e) => {#}
+{#        e.preventDefault();#}
+{#        const newEmployee = {#}
+{#            name: document.getElementById('name').value,#}
+{#            age: parseInt(document.getElementById('age').value),#}
+{#            department: document.getElementById('department').value,#}
+{#            salary: parseFloat(document.getElementById('salary').value),#}
+{#            hire_date: document.getElementById('hire_date').value,#}
+{#        };#}
+{#        try {#}
+{#            const response = await fetch(url + 'create/', {#}
+{#                method: 'POST',#}
+{#                headers: {'Content-Type': 'application/json'},#}
+{#                body: JSON.stringify(newEmployee)#}
+{#            });#}
+{#            if (response.ok) {#}
+{#                employeeForm.reset();#}
+{#                fetchEmployees();#}
+{#            } else {#}
+{#                const errorData = await response.json();#}
+{#                console.error("Error creating employee:", errorData);#}
+{#            }#}
+{#        } catch (error) {#}
+{#            console.error("Error creating employee:", error);#}
+{#        }#}
+{#    });#}
+{##}
+{#    // Delete employee#}
+{#    async function deleteEmployee(id) {#}
+{#        try {#}
+{#            await fetch(`${url}delete/${id}/`, {method: 'DELETE'});#}
+{#            fetchEmployees();#}
+{#        } catch (error) {#}
+{#            //... error handling.#}
+{#        }#}
+{#    }#}
+{##}
+{#    // Edit employee row#}
+{#    async function editEmployeeRow(row, employee) {#}
+{#        row.innerHTML = `#}
+{#            <td><input type="text" value="${employee.name}" class="edit-name" required></td>#}
+{#            <td><input type="number" value="${employee.age}" class="edit-age" required></td>#}
+{#            <td><input type="text" value="${employee.department}" class="edit-department" required></td>#}
+{#            <td><input type="number" value="${employee.salary}" class="edit-salary" required></td>#}
+{#            <td><input type="date" value="${employee.hire_date}" class= "edit-hire_date" required></td>#}
+{##}
+{#            <td>#}
+{#                <button class="save-btn">Save</button>#}
+{#                <button class="cancel-btn">Cancel</button>#}
+{#            </td>#}
+{#        `;#}
+{##}
+{#        row.querySelector('.save-btn').addEventListener('click', async () => {#}
+{#            const updatedEmployee = {#}
+{#                name: row.querySelector('.edit-name').value,#}
+{#                age: parseInt(row.querySelector('.edit-age').value),#}
+{#                department: row.querySelector('.edit-department').value,#}
+{#                salary: parseFloat(row.querySelector('.edit-salary').value),#}
+{#                hire_date: row.querySelector('.edit-hire_date').value,#}
+{#            };#}
+{#            try {#}
+{#                await fetch(`${url}update/${employee.id}/`, {#}
+{#                    method: 'PUT',#}
+{#                    headers: {'Content-Type': 'application/json'},#}
+{#                    body: JSON.stringify(updatedEmployee),#}
+{#                });#}
+{#                fetchEmployees();#}
+{#            } catch (error) {#}
+{#                console.error("Error updating employee:", error);#}
+{#            }#}
+{#        });#}
+{##}
+{#        row.querySelector('.cancel-btn').addEventListener('click', () => {#}
+{#            row.innerHTML = `#}
+{#                <td>${employee.name}</td>#}
+{#                <td>${employee.age}</td>#}
+{#                <td>${employee.department}</td>#}
+{#                <td>${employee.salary}</td>#}
+{#                <td>#}
+{#                    <button class="edit-btn" data-id="${employee.id}">Edit</button>#}
+{#                    <button class="delete-btn" data-id="${employee.id}">Delete</button>#}
+{#                </td>#}
+{#            `;#}
+{#        });#}
+{#    }#}
+{##}
+{#    employeeTableBody.addEventListener('click', async (e) => {#}
+{#        const button = e.target;#}
+{##}
+{#        if (button.classList.contains('edit-btn')) {#}
+{#            const row = button.closest('tr');#}
+{#            const id = button.getAttribute('data-id');#}
+{#            try {#}
+{#                const response = await fetch(`${url}${id}`);#}
+{#                const employee = await response.json();#}
+{#                editEmployeeRow(row, employee);#}
+{#            } catch (error) {#}
+{#                console.error("Error fetching employee details:", error);#}
+{#            }#}
+{#        } else if (button.classList.contains('delete-btn')) {#}
+{#            const id = button.getAttribute('data-id');#}
+{#            await deleteEmployee(id);#}
+{#        }#}
+{#    });#}
+{##}
+{#    fetchEmployees();#}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,57 +216,145 @@
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             text-align: left;
         }
+
         .form-container {
             margin-bottom: 20px;
         }
+
+        #employeeTableContainer,
+        #employeeFormContainer {
+            display: none; /* Initially hide the table and form */
+        }
     </style>
 </head>
+
 <body>
-    <h1>Employee List</h1>
-    <div class="form-container">
-        <h3>Add Employee</h3>
-        <form id="employeeForm">
-            <input type="text" id="name" placeholder="Name" required>
-            <input type="number" id="age" placeholder="Age" required>
-            <input type="text" id="department" placeholder="Department" required>
-            <input type="number" id="salary" placeholder="Salary" required>
-            <button type="submit">Add Employee</button>
-        </form>
-    </div>
+<h1>Employee List</h1>
+
+<button onclick="login()">Login</button>
+<button onclick="logout()" id="logoutButton" style="display: none;">Logout</button>
+
+<div class="form-container" id="employeeFormContainer">
+    <h3>Add Employee</h3>
+    <form id="employeeForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="number" id="age" placeholder="Age" required>
+        <input type="text" id="department" placeholder="Department" required>
+        <input type="number" id="salary" placeholder="Salary" required>
+        <input type="date" id="hire_date" placeholder="Hire Date" required>
+        <button type="submit">Add Employee</button>
+    </form>
+</div>
+
+<div id="employeeTableContainer">
     <table>
         <thead>
-            <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Department</th>
-                <th>Salary</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Department</th>
+            <th>Salary</th>
+            <th>Hire date</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody id="employeeTableBody">
-            </tbody>
+        </tbody>
     </table>
+</div>
 
 <script>
-    const url = 'http://127.0.0.1:8000/api/employees/';
+    const myUrl = 'http://127.0.0.1:8000/'; // Update with your base URL
     const employeeTableBody = document.getElementById('employeeTableBody');
     const employeeForm = document.getElementById('employeeForm');
+    const employeeTableContainer = document.getElementById('employeeTableContainer');
+    const employeeFormContainer = document.getElementById('employeeFormContainer');
+    const logoutButton = document.getElementById('logoutButton');
+
+    let accessToken = localStorage.getItem('accessToken');
+
+    // Check for existing token on page load
+    if (accessToken) {
+        showEmployeeInterface();
+        fetchEmployees();
+    }
+
+    // Login function
+    function login() {
+        fetch(myUrl + 'users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: 'admco', // Replace with your username
+                password: '1234' // Replace with your password
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Login failed: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                accessToken = data.access; // Correct property name
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', data.refresh); // Store refresh token
+                alert('Logged in successfully.');
+                showEmployeeInterface();
+                fetchEmployees();
+            })
+            .catch(error => console.error('Login error:', error));
+    }
+
+    function logout() {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        accessToken = null;
+        employeeTableContainer.style.display = 'none';
+        employeeFormContainer.style.display = 'none';
+        logoutButton.style.display = 'none';
+        // Optionally, you might want to reload the page or show a login prompt again.
+    }
+
+    function showEmployeeInterface() {
+        employeeTableContainer.style.display = 'block';
+        employeeFormContainer.style.display = 'block';
+        logoutButton.style.display = 'block';
+    }
 
     // Fetch and display employees
     async function fetchEmployees() {
         try {
-            const response = await fetch(url, {
-                method: 'POST', // Use POST to get all employees
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({}) // Send empty JSON body
+            const response = await fetch(myUrl + 'api/employees/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}` // Include the token
+                },
             });
+            if (!response.ok) {
+                if (response.status === 401) {
+                    // Handle unauthorized access (e.g., token expired)
+                    alert("Your session has expired. Please log in again.");
+                    logout();
+                    return;
+                }
+                throw new Error('Error fetching employees: ' + response.statusText);
+            }
             const employees = await response.json();
             employeeTableBody.innerHTML = '';
             employees.forEach(employee => {
@@ -75,15 +370,16 @@
         const row = document.createElement('tr');
 
         row.innerHTML = `
-            <td>${employee.name}</td>
-            <td>${employee.age}</td>
-            <td>${employee.department}</td>
-            <td>${employee.salary}</td>
-            <td>
-                <button class="edit-btn" data-id="${employee.id}">Edit</button>
-                <button class="delete-btn" data-id="${employee.id}">Delete</button>
-            </td>
-        `;
+                <td>${employee.name}</td>
+                <td>${employee.age}</td>
+                <td>${employee.department}</td>
+                <td>${employee.salary}</td>
+                <td>${employee.hire_date}</td>
+                 <td>
+                     <button class="edit-btn" data-id="${employee.id}">Edit</button>
+                     <button class="delete-btn" data-id="${employee.id}">Delete</button>
+                 </td>
+            `;
 
         employeeTableBody.appendChild(row);
     }
@@ -95,12 +391,16 @@
             name: document.getElementById('name').value,
             age: parseInt(document.getElementById('age').value),
             department: document.getElementById('department').value,
-            salary: parseFloat(document.getElementById('salary').value)
+            salary: parseFloat(document.getElementById('salary').value),
+            hire_date: document.getElementById('hire_date').value,
         };
         try {
-            const response = await fetch(url + 'create/', {
+            const response = await fetch(myUrl + 'api/employees/create/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
                 body: JSON.stringify(newEmployee)
             });
             if (response.ok) {
@@ -118,7 +418,15 @@
     // Delete employee
     async function deleteEmployee(id) {
         try {
-            await fetch(`${url}delete/${id}`, { method: 'DELETE' });
+            const response = await fetch(myUrl + `api/employees/delete/${id}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Error deleting employee: ' + response.statusText);
+            }
             fetchEmployees();
         } catch (error) {
             console.error("Error deleting employee:", error);
@@ -128,29 +436,37 @@
     // Edit employee row
     async function editEmployeeRow(row, employee) {
         row.innerHTML = `
-            <td><input type="text" value="${employee.name}" class="edit-name" required></td>
-            <td><input type="number" value="${employee.age}" class="edit-age" required></td>
-            <td><input type="text" value="${employee.department}" class="edit-department" required></td>
-            <td><input type="number" value="${employee.salary}" class="edit-salary" required></td>
-            <td>
-                <button class="save-btn">Save</button>
-                <button class="cancel-btn">Cancel</button>
-            </td>
-        `;
+        <td><input type="text" value="${employee.name}" class="edit-name" required></td>
+        <td><input type="number" value="${employee.age}" class="edit-age" required></td>
+        <td><input type="text" value="${employee.department}" class="edit-department" required></td>
+        <td><input type="number" value="${employee.salary}" class="edit-salary" required></td>
+        <td><input type="date" value="${employee.hire_date}" class= "edit-hire_date" required></td>
+        <td>
+            <button class="save-btn">Save</button>
+            <button class="cancel-btn">Cancel</button>
+        </td>
+    `;
 
         row.querySelector('.save-btn').addEventListener('click', async () => {
             const updatedEmployee = {
                 name: row.querySelector('.edit-name').value,
                 age: parseInt(row.querySelector('.edit-age').value),
                 department: row.querySelector('.edit-department').value,
-                salary: parseFloat(row.querySelector('.edit-salary').value),
+                salary: parseFloat(row.querySelector('.edit-salary').value, 10),
+                hire_date: row.querySelector('.edit-hire_date').value,
             };
             try {
-                await fetch(`${url}update/${employee.id}`, {
+                const response = await fetch(myUrl + `api/employees/update/${employee.id}/`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
                     body: JSON.stringify(updatedEmployee),
                 });
+                if (!response.ok) {
+                    throw new Error('Error updating employee: ' + response.statusText);
+                }
                 fetchEmployees();
             } catch (error) {
                 console.error("Error updating employee:", error);
@@ -159,15 +475,15 @@
 
         row.querySelector('.cancel-btn').addEventListener('click', () => {
             row.innerHTML = `
-                <td>${employee.name}</td>
-                <td>${employee.age}</td>
-                <td>${employee.department}</td>
-                <td>${employee.salary}</td>
-                <td>
-                    <button class="edit-btn" data-id="${employee.id}">Edit</button>
-                    <button class="delete-btn" data-id="${employee.id}">Delete</button>
-                </td>
-            `;
+            <td>${employee.name}</td>
+            <td>${employee.age}</td>
+            <td>${employee.department}</td>
+            <td>${employee.salary}</td>
+            <td>
+                <button class="edit-btn" data-id="${employee.id}">Edit</button>
+                <button class="delete-btn" data-id="${employee.id}">Delete</button>
+            </td>
+        `;
         });
     }
 
@@ -178,7 +494,14 @@
             const row = button.closest('tr');
             const id = button.getAttribute('data-id');
             try {
-                const response = await fetch(`${url}${id}`);
+                const response = await fetch(myUrl + `api/employees/${id}/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Error fetching employee details: ' + response.statusText);
+                }
                 const employee = await response.json();
                 editEmployeeRow(row, employee);
             } catch (error) {
@@ -189,9 +512,8 @@
             await deleteEmployee(id);
         }
     });
-
-    fetchEmployees();
 </script>
 
 </body>
+
 </html>
