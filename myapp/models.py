@@ -1,23 +1,14 @@
-from bson import ObjectId
-from django.db import models
+from flask_sqlalchemy import SQLAlchemy
+from myapp.extensions import db
 
+class Employee(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    age = db.Column(db.Integer)
+    department = db.Column(db.String(100))
+    salary = db.Column(db.Float)
+    hire_date = db.Column(db.Date)
+    projects = db.Column(db.String) #Store JSON as string.
 
-class Employee(models.Model):
-    name = models.CharField(max_length=255)
-    age = models.IntegerField()
-    department = models.CharField(max_length=255)
-    salary = models.FloatField()
-    hire_date = models.DateField()
-    projects = models.JSONField(default=list)  # Use JSONField for the 'projects' array
-    id = models.CharField(max_length=255, primary_key=True)
-
-    @property
-    def id(self):
-        return self._id  # Access the _id field as `id` in the template
-
-    # Optional: Add a save method if you need to override the behavior when saving an instance
-    def save(self, *args, **kwargs):
-        if not self.id:  # Corrected line
-            # Your logic to generate a new ID (if needed)
-            pass
-        super().save(*args, **kwargs)
+    def __repr__(self):
+        return f'<Employee {self.name}>'

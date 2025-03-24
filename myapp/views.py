@@ -1,70 +1,38 @@
-import logging
-
-from django.shortcuts import render
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status, viewsets
-from .models import Employee
-from .serializers import EmployeeSerializer
-
-
-class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
-    permission_classes = [IsAuthenticated]
-
-
-def employee_list_view(request):  # Rename the view
-    employees = Employee.objects.all()
-    return render(request, 'employee_list.html', {'employees': employees})
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def employee_list_api(request):
-    employees = Employee.objects.all()
-    serializer = EmployeeSerializer(employees, many=True)
-    return Response(serializer.data)
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def employee_create_api(request):
-    serializer = EmployeeSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def employee_detail_api(request, employee_id):
-    try:
-        employee = Employee.objects.get(pk=employee_id)
-    except Employee.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    serializer = EmployeeSerializer(employee)
-    return Response(serializer.data)
-
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def employee_update_api(request, employee_id):
-    try:
-        employee = Employee.objects.get(pk=employee_id)
-    except Employee.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    serializer = EmployeeSerializer(employee, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def employee_delete_api(request, employee_id):
-    try:
-        employee = Employee.objects.get(pk=employee_id)
-    except Employee.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    employee.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+# from flask import jsonify, request
+# from models import Employee, db, app  # Import db from models.py
+# from schemas import employee_schema, employees_schema #Import the schemas
+#
+# # Assuming you have 'app' defined in your main app.py file.
+# # If not, you'll need to create it.
+#
+# @app.route('/employees', methods=['GET'])
+# def get_employees():
+#     all_employees = Employee.query.all()
+#     result = employees_schema.dump(all_employees)
+#     return jsonify(result)
+#
+# @app.route('/employees', methods=['POST'])
+# def add_employee():
+#     new_employee = employee_schema.load(request.json)
+#     db.session.add(new_employee)
+#     db.session.commit()
+#     return employee_schema.jsonify(new_employee), 201
+#
+# @app.route('/employees/<int:employee_id>', methods=['GET'])
+# def get_employee(employee_id):
+#     employee = Employee.query.get_or_404(employee_id)
+#     return employee_schema.jsonify(employee)
+#
+# @app.route('/employees/<int:employee_id>', methods=['PUT'])
+# def update_employee(employee_id):
+#     employee = Employee.query.get_or_404(employee_id)
+#     updated_employee = employee_schema.load(request.json, instance=employee)
+#     db.session.commit()
+#     return employee_schema.jsonify(updated_employee)
+#
+# @app.route('/employees/<int:employee_id>', methods=['DELETE'])
+# def delete_employee(employee_id):
+#     employee = Employee.query.get_or_404(employee_id)
+#     db.session.delete(employee)
+#     db.session.commit()
+#     return jsonify({'message': 'Employee deleted'}), 204
